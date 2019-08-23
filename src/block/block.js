@@ -9,10 +9,8 @@ import './style.scss';
 const { __ } = wp.i18n;
 const { registerBlockType } = wp.blocks;
 const { Component } = wp.element
+const { useEffect } = wp.element
 
-
-
-import testFu from './index.js'
 
 registerBlockType( 'cgb/block-ski-resort-card', {
 	title: __( 'Ski Resort Card' ),
@@ -27,57 +25,76 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 		resortNames: {
 			type: 'string'
 		},
+		resortList: {
+			type: 'array'
+		}
 	},
-
-	test: (props) => {
-		return (
-			<h1>Hola</h1>
-		)
+	componentDidMount(){
+		console.log("test")
 	},
 	
-	edit: class extends Component {
+	edit: ( {attributes, setAttributes} ) => {
 		
-		constructor(props) {
-			console.log(props)
-			super(props)
-			this.state = {}
-		}
-
-		componentDidMount = () => {
-			// console.log("test",this.props)
+		
+		useEffect(() => {
 			
-		}
+			// fetch('https://api.chucknorris.io/jokes/random')
+			fetch('https://api.fnugg.no/search?')
+			.then(res => {
 
-		// let resortList = fetch('https://api.fnugg.no/search?').then(res => {
+				return res.json()
+
+			})
+			.then(json => {
+
+				let resortList = json.hits.hits.map(resorts => {
+					return resorts._source
+				})
+
+			})
+			.then(resortList => {
+
+				setAttributes({
+					resortList: resortList
+				})
+				console.log(attributes)
+			})
+			setAttributes({
+				resortList: "dette er en test"
+			})
+			console.log(attributes.resortList)
+			
+		}, [])
+		
+
+		// fetch('https://api.fnugg.no/search?').then(res => {
 		// 	return res.json()
 		// }).then(json => {
-		// 	json.hits.hits.map(resorts => {
+			
+		// 	let resortList = json.hits.hits.map(resorts => {
 		// 		return resorts._source
 		// 	})
-		// }).then(() => {
-		// 	console.log(resortList)
+		// 	props.setAttributes({
+		// 		// resortList: resortList 
+		// 	})
+		// 	console.log(props.attributes)
 		// })
 		// Creates a <p class='wp-block-cgb-block-ski-resort-card'></p>.
-		render(){
-
-			return(
-
-				<div className="">
-					<h4>Chose ski resort</h4>
-					<input type="text" list="data"  />
-					<datalist id="data">
-						<option value="test123"></option>
-						<option value="test234"></option>
-					</datalist>
-					<test>test</test>
-				</div>
-			)
-		}
+		return (
+			<div className="">
+				<h4>Chose ski resort</h4>
+				<input type="text" list="data"  />
+				<datalist id="data">
+					<option value="abc"></option>
+					<option value="cde"></option>
+					<option value="def"></option>
+					<option value="fedcba"></option>
+				</datalist>
+			</div>
+		)
 	},
 
 	save: () => {
 		return null
 	},
 } );
-
-console.log("test")
