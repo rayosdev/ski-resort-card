@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: ski-resort-card — CGB Gutenberg Block Plugin
- * Plugin URI: https://github.com/ahmadawais/create-guten-block/
- * Description: ski-resort-card — is a Gutenberg plugin created via create-guten-block.
- * Author: mrahmadawais, maedahbatool
- * Author URI: https://AhmadAwais.com/
- * Version: 1.0.0
+ * Plugin URI: https://github.com/rayosdev/ski-resort-card
+ * Description: ski-resort-card for easy viewing of ski resorts in norway
+ * Author: Jared Anders Isaksen
+ * Author URI: https://Isaksen.tech
+ * Version: 0.1.0
  * License: GPL2+
  * License URI: https://www.gnu.org/licenses/gpl-2.0.txt
  *
