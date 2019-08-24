@@ -5,16 +5,16 @@
 //  Import CSS.
 import './editor.scss';
 import './style.scss';
+import Select from 'react-select'
 
 const { __ } = wp.i18n;
-const { registerBlockType } = wp.blocks;
-const { Component } = wp.element
-const { useEffect } = wp.element
+const { registerBlockType, PlainText } = wp.blocks;
+const { Component, useEffect } = wp.element
 
 
 registerBlockType( 'cgb/block-ski-resort-card', {
 	title: __( 'Ski Resort Card' ),
-	icon: 'location-alt', 
+	icon: 'location-alt',
 	category: 'widgets',
 	keywords: [
 		__( 'ski-resort-card — CGB Block' ),
@@ -23,22 +23,35 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 
 	attributes: {
 		resortNames: {
-			type: 'string'
+			type: 'array',
+			default: [],
 		},
 		resortList: {
-			type: 'array'
+			type: 'array',
+			default: []
+		},
+		selectedResort: {
+			type: 'string',
+			default: 'man'
+		},
+		test: {
+			type: 'string',
+			default: 'mamas boy'
 		}
 	},
-	componentDidMount(){
-		console.log("test")
-	},
-	
-	edit: ( {attributes, setAttributes} ) => {
-		
-		
-		useEffect(() => {
+
+	edit: class extends Component {
+
+		constructor(props){
+			super(...arguments)
+			this.props = props
+
+			// this.handelClick = this.handelClick.bind(this)
+			this.hanelChange = this.hanelChange.bind(this)
+		}
+
+		componentDidMount() {
 			
-			// fetch('https://api.chucknorris.io/jokes/random')
 			fetch('https://api.fnugg.no/search?')
 			.then(res => {
 
@@ -47,51 +60,45 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 			})
 			.then(json => {
 
+				let resortNames = []
 				let resortList = json.hits.hits.map(resorts => {
+					resortNames.push(resorts._source.name)
 					return resorts._source
 				})
-
-			})
-			.then(resortList => {
-
-				setAttributes({
+				this.props.setAttributes({
+					resortNames: resortNames,
 					resortList: resortList
 				})
-				console.log(attributes)
+				console.log(this.props.attributes)
 			})
-			setAttributes({
-				resortList: "dette er en test"
-			})
-			console.log(attributes.resortList)
-			
-		}, [])
-		
+		}
 
-		// fetch('https://api.fnugg.no/search?').then(res => {
-		// 	return res.json()
-		// }).then(json => {
-			
-		// 	let resortList = json.hits.hits.map(resorts => {
-		// 		return resorts._source
-		// 	})
-		// 	props.setAttributes({
-		// 		// resortList: resortList 
-		// 	})
-		// 	console.log(props.attributes)
-		// })
-		// Creates a <p class='wp-block-cgb-block-ski-resort-card'></p>.
-		return (
-			<div className="">
-				<h4>Chose ski resort</h4>
-				<input type="text" list="data"  />
-				<datalist id="data">
-					<option value="abc"></option>
-					<option value="cde"></option>
-					<option value="def"></option>
-					<option value="fedcba"></option>
-				</datalist>
-			</div>
-		)
+		hanelChange(e){
+			this.props.setAttributes({
+				selectedResort: e.value
+			})
+
+		}
+
+		render() {
+			return (
+				<div className="ski-resort-card__container">
+					<Select
+						placeholder="Velg Ski Senter..."
+						value={ this.props.selectedResort }
+						options={ this.props.attributes.resortNames.map(option => {
+							return {value: option, label: option}
+						}) }
+						onChange={ this.hanelChange }
+					/>
+					<div className="card-preview__container ski-resort-card__preview">
+						<h1 className="card-preview__header">
+							
+						</h1>
+					</div>
+				</div>
+			)
+		}
 	},
 
 	save: () => {
