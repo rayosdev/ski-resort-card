@@ -4,6 +4,10 @@
  * Can include things like variables and mixins
  * that are used across the project.
 */
+@import url("https://fonts.googleapis.com/css?family=Open+Sans&display=swap");
+h1, h2, h3, p {
+  margin: 0; }
+
 /**
  * #.# Editor Styles
  *
@@ -17,3 +21,65 @@
   margin: 0 auto;
   max-width: 740px;
   padding: 2rem; }
+
+.card-preview__container h1::before,
+.card-preview__container h2::before {
+  display: none !important;
+  font-family: "Open Sans", sans-serif !important; }
+
+.ski-resort-card__select {
+  max-width: 550px;
+  margin: 0 auto;
+  margin-bottom: 70px;
+  padding-top: 40px; }
+
+.card-preview__container {
+  max-width: 550px;
+  margin: 0 auto;
+  border: solid red 2px;
+  font-family: 'Open Sans', sans-serif; }
+
+.card-preview__header-container {
+  height: 69px;
+  background: #333333;
+  border-radius: 5px 5px 0px 0px;
+  display: grid; }
+
+.card-preview__header {
+  font-weight: bold;
+  font-size: 22px !important;
+  letter-spacing: 0.025em;
+  text-justify: center;
+  color: #FFFFFF;
+  -ms-flex-item-align: center;
+      align-self: center;
+  margin: 0;
+  margin-left: 1vw; }
+
+.card-preview__image-container {
+  min-height: 300px;
+  display: grid; }
+
+.card-preview__image-byline-container {
+  background: #333333af;
+  color: #ffffff;
+  height: 100%;
+  max-height: 85px;
+  align-self: end;
+  display: grid;
+  -ms-flex-pack: center;
+      justify-content: center;
+  text-align: center; }
+
+.card-preview .image-byline__header {
+  font-size: 24px !important;
+  color: #fff;
+  font-weight: 400;
+  -ms-flex-item-align: end;
+      align-self: end; }
+
+.card-preview .image-byline__date {
+  font-size: 16px;
+  -ms-flex-item-align: start;
+      align-self: start;
+  text-align: center; }

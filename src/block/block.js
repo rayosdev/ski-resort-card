@@ -26,18 +26,18 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 			type: 'array',
 			default: [],
 		},
+		_resortNames: {
+			type: 'array',
+			default: [],
+		},
 		resortList: {
 			type: 'array',
 			default: []
 		},
 		selectedResort: {
 			type: 'object',
-			default: {}
+			default: null
 		},
-		test: {
-			type: 'string',
-			default: 'mamas boy'
-		}
 	},
 
 	edit: class extends Component {
@@ -46,12 +46,14 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 			super(...arguments)
 			this.props = props
 
-			// this.handelClick = this.handelClick.bind(this)
 			this.handelChange = this.handelChange.bind(this)
 		}
 
 		componentDidMount() {
+			//__ New Method
+			fetch('https://api.fnugg.no/search?')
 			
+			//__ Old Method
 			fetch('https://api.fnugg.no/search?')
 			.then(res => {
 
@@ -77,7 +79,7 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 				return resort.name == e.value
 			})
 			this.props.setAttributes({
-				selectedResort: selectedResort
+				selectedResort: selectedResort[0]
 			})
 			setTimeout(()=> {
 				console.log(this.props.attributes['selectedResort'])
@@ -85,16 +87,17 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 		}
 
 		getImage = () => {
-			console.log(this.props.attributes['selectedResort'].images)
-			return "https://coubsecure-s.akamaihd.net/get/b110/p/coub/simple/cw_timeline_pic/4d15a69d5a6/6647cc3bc4ff6338e6da6/med_1473179695_image.jpg"
+			return this.props.attributes.selectedResort.images.image_1_1_s
 		} 
 
 		formateDate = (date) => {
-			console.log(date)
+			const day 	= date.slice(0,10)
+			const time 	= date.slice(11,16)
+			return `${day} - ${time}`
 		}
 
 		skyIcon = (report) => {
-			console.log(report)
+			console.log("sky report: " ,report)
 		}
 
 
@@ -103,12 +106,62 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 			let previewCard
 
 			if(this.props.attributes.selectedResort){
-				previewCard = 
+				previewCard = (
+					<div className="card-preview card-preview__container">
+						<div className="card-preview__header-container">
+							<h1 className="card-preview__header">
+								{ this.props.attributes.selectedResort.name }
+							</h1>
+						</div>
+						<div 
+							className="card-preview__image-container"
+							style={{
+									backgroundImage: `url(${this.props.attributes.selectedResort.images.image_1_1_s})`,
+									backgroundRepeat: 'no-repeat',
+									backgroundSize: 'cover',
+								}}
+						>
+							<div className="card-preview__image-byline-container">
+								<h2 className="image-byline__header">
+									DAGENS FORHOLD
+								</h2>
+								<p className="image-byline__date">
+									Oppdatert: { this.formateDate(this.props.attributes.selectedResort.conditions.combined.top.last_updated) }
+								</p>
+							</div>
+						</div>
+						<div className="card-preview__facts-container">
+							<div className="facts__sky-container">
+								<img 
+									src={ this.skyIcon(this.props.attributes.selectedResort.conditions.combined.top.condition_description) } 
+									alt="" 
+									className="facts__sky-icon"
+								/>
+								<h3 className="fact__sky-condition">
+									{ this.props.attributes.selectedResort.conditions.combined.top.condition_description }
+								</h3>
+							</div>
+							<div className="card-preview__temperature">
+								{ this.props.attributes.selectedResort.conditions.combined.top.temperature.value }°
+							</div>
+							<div className="card-preview__wind-contianer">
+								<h3 className="card-preview__wind-header">
+									{ this.props.attributes.selectedResort.conditions.combined.top.wind.mps }m/s
+								</h3>
+								<p className="card-preview__wind-header">
+									{ this.props.attributes.selectedResort.conditions.combined.top.wind.speed }
+								</p>
+							</div>
+						</div>
+
+					</div>
+				)
 			}
 
 			return (
-				<div className="ski-resort-card__container">
+				<div className="ski-resort-card__container ski-resort-card">
 					<Select
+						className="ski-resort-card__select"
 						placeholder="Velg Ski Senter..."
 						options={ this.props.attributes.resortNames.map(option => {
 							return {value: option, label: option}
@@ -116,41 +169,8 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 						onChange={ this.handelChange }
 					/>
 
-					<div 
-						className="card-preview__container ski-resort-card__preview"
-					>
-						<h1 className="card-preview__header">
-							{ this.props.attributes.selectedResort.name }
-						</h1>
-						<div className="card-preview__image-container">
-							<img 
-								src={ this.getImage() } 
-								alt="Bilde av ski senteret" 
-								className="card-preview__image"
-							/>
-							<div className="card-preview__image-byline-container">
-								<h2 className="image-byline__header">
-									DAGENS FORHOLD
-								</h2>
-								<p className="image-byline__date">
-									{ this.formateDate(this.props.attributes.selectedResort.last_updated) }
-								</p>
-							</div>
-							<div className="card-preview__facts-container">
-								<div className="facts__sky-container">
-									<img 
-										src={ this.skyIcon(this.props.attributes.selectedResort.conditions.combined.top.condition_description) } 
-										alt="" 
-										className="facts__sky-icon"
-									/>
-									<h3 className="fact__sky-condition">
-										{ this.props.attributes.selectedResort.conditions.combined.top.condition_description }
-									</h3>
-								</div>
-							</div>
-						</div>
+					{ previewCard }
 
-					</div>
 				</div>
 			)
 		}
