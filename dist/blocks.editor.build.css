@@ -5,6 +5,7 @@
  * that are used across the project.
 */
 @import url("https://fonts.googleapis.com/css?family=Open+Sans&display=swap");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css");
 h1, h2, h3, p {
   margin: 0; }
 
@@ -47,14 +48,14 @@ h1, h2, h3, p {
 
 .card-preview__header {
   font-weight: bold;
-  font-size: 22px !important;
+  font-size: 20px !important;
   letter-spacing: 0.025em;
   text-justify: center;
   color: #FFFFFF;
   -ms-flex-item-align: center;
       align-self: center;
   margin: 0;
-  margin-left: 1vw; }
+  margin-left: 0.5vw; }
 
 .card-preview__image-container {
   min-height: 300px;

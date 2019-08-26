@@ -6,6 +6,7 @@
 import './editor.scss';
 import './style.scss';
 import Select from 'react-select'
+import skyIcons from './clouds.js'
 
 const { __ } = wp.i18n;
 const { registerBlockType, PlainText } = wp.blocks;
@@ -46,12 +47,26 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 			super(...arguments)
 			this.props = props
 
-			this.handelChange = this.handelChange.bind(this)
 		}
 
 		componentDidMount() {
 			//__ New Method
-			fetch('https://api.fnugg.no/search?')
+			fetch('https://api.fnugg.no/search?sourceFields=name&size=1000')
+			.then(res => {
+				return res.json()
+			})
+			.then(json => {
+				// console.log(json)
+				let _resortNames = json.hits.hits.map(resorts => {
+					return {
+								id: resorts._id,
+								name: resorts._source.name
+							}
+				})
+				this.props.setAttributes({
+					_resortNames: _resortNames,
+				})
+			})
 			
 			//__ Old Method
 			fetch('https://api.fnugg.no/search?')
@@ -74,16 +89,23 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 			})
 		}
 		
-		handelChange(e){
+		handelChange = (e) => {
+
+
+			
+			let nameAndID = this.props.attributes._resortNames.filter(nameObject => {
+				return nameObject.name == e.value
+			}) 
+
 			let selectedResort = this.props.attributes['resortList'].filter(resort => {
 				return resort.name == e.value
 			})
 			this.props.setAttributes({
 				selectedResort: selectedResort[0]
 			})
-			setTimeout(()=> {
-				console.log(this.props.attributes['selectedResort'])
-			},1000)
+			// setTimeout(()=> {
+			// 	console.log(this.props.attributes['selectedResort'])
+			// },1000)
 		}
 
 		getImage = () => {
@@ -96,27 +118,86 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 			return `${day} - ${time}`
 		}
 
-		skyIcon = (report) => {
-			console.log("sky report: " ,report)
+		skyConditions = ( condition ) => {
+			if(typeof(condition.symbol.name) === 'undefined'){
+				console.log('skyConditions exit, name dosent exist')
+				return ''
+			}else if(condition.symbol.name === ''){
+				console.log('skyConditions exit, name is just a string')
+				return ''
+			}
+
+			const name = condition.symbol.name
+			if(typeof(skyIcons[name]) === 'undefined'){
+				console.log('skyConditions exit, name isent in skyIcons')
+				return ''
+			}
+
+			let icon = skyIcons[name].icon
+			let text = skyIcons[name].text
+
+			return (
+				<div className="facts__sky-container">
+					<i className={ `wi ${icon}` }></i>
+					<h3 className="fact__sky-condition"> { text } </h3>
+				</div>
+			)
+		}
+
+		temperature = ( condition ) => {
+			return (
+				<div className="card-preview__temperature">
+					{ condition.temperature.value }°
+				</div>
+			)
+		}
+
+		windConditions = ( condition ) => {
+			return (
+				<div className="card-preview__wind-contianer">
+					<h3 className="card-preview__wind-header">
+						{ condition.wind.mps }m/s
+					</h3>
+					<p className="card-preview__wind-header">
+						{ condition.wind.speed }
+					</p>
+				</div>
+			)
+		}
+
+		conditionDescription = ( condition ) => {
+			return (
+				<div className="card-preview__facts-condition-container">
+
+					<h3 className="card-preview__facts-condition">
+						{ condition.condition_description }
+					</h3>
+				</div>
+			)
 		}
 
 
 		render() {
 
+			const selectedResort = this.props.attributes.selectedResort
+			const conditions = selectedResort.conditions.combined.top
+			if(typeof(condition.symbol.name) === 'undefined'){
+				
+			}
+			
 			let previewCard
-
-			if(this.props.attributes.selectedResort){
+			if(selectedResort){
 				previewCard = (
 					<div className="card-preview card-preview__container">
 						<div className="card-preview__header-container">
 							<h1 className="card-preview__header">
-								{ this.props.attributes.selectedResort.name }
+								{ selectedResort.name }
 							</h1>
 						</div>
 						<div 
 							className="card-preview__image-container"
 							style={{
-									backgroundImage: `url(${this.props.attributes.selectedResort.images.image_1_1_s})`,
+									backgroundImage: `url(${ selectedResort.images.image_1_1_s })`,
 									backgroundRepeat: 'no-repeat',
 									backgroundSize: 'cover',
 								}}
@@ -126,32 +207,20 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 									DAGENS FORHOLD
 								</h2>
 								<p className="image-byline__date">
-									Oppdatert: { this.formateDate(this.props.attributes.selectedResort.conditions.combined.top.last_updated) }
+									Oppdatert: { this.formateDate( conditions.last_updated) }
 								</p>
 							</div>
 						</div>
 						<div className="card-preview__facts-container">
-							<div className="facts__sky-container">
-								<img 
-									src={ this.skyIcon(this.props.attributes.selectedResort.conditions.combined.top.condition_description) } 
-									alt="" 
-									className="facts__sky-icon"
-								/>
-								<h3 className="fact__sky-condition">
-									{ this.props.attributes.selectedResort.conditions.combined.top.condition_description }
-								</h3>
-							</div>
-							<div className="card-preview__temperature">
-								{ this.props.attributes.selectedResort.conditions.combined.top.temperature.value }°
-							</div>
-							<div className="card-preview__wind-contianer">
-								<h3 className="card-preview__wind-header">
-									{ this.props.attributes.selectedResort.conditions.combined.top.wind.mps }m/s
-								</h3>
-								<p className="card-preview__wind-header">
-									{ this.props.attributes.selectedResort.conditions.combined.top.wind.speed }
-								</p>
-							</div>
+							
+							{ this.skyConditions( conditions ) }
+							
+							{ this.temperature( conditions ) }
+							
+							{ this.windConditions( conditions ) }
+							
+							{ this.conditionDescription( conditions ) }
+							
 						</div>
 
 					</div>
@@ -163,8 +232,8 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 					<Select
 						className="ski-resort-card__select"
 						placeholder="Velg Ski Senter..."
-						options={ this.props.attributes.resortNames.map(option => {
-							return {value: option, label: option}
+						options={ this.props.attributes._resortNames.map(option => {
+							return {value: option.name, label: option.name}
 						}) }
 						onChange={ this.handelChange }
 					/>
