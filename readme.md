@@ -17,11 +17,11 @@
 
 ### Develop plugin
 
-## clone repo
+#### clone repo
 
-## run `npm install`
+#### run `npm install`
 
-## run `npm start`
+#### run `npm start`
 
 
 ----------------------------
