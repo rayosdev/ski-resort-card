@@ -145,8 +145,8 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 
 			return (
 				<div className="facts__sky-container">
-					<i className={ `wi ${icon}` }></i>
-					<h3 className="fact__sky-condition"> { text } </h3>
+					<i className={ ` facts__sky-icon  [ wi ${icon} ]` }></i>
+					<h3 className="facts__sky-text"> { text } </h3>
 				</div>
 			)
 		}
@@ -154,10 +154,10 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 		temperature = ( condition ) => {
 
 			if(condition.temperature.value == null || condition.temperature.value == ''){
-				return ''
+				return '---'
 			}else{
 				return (
-					<div className="card-preview__temperature">
+					<div className="facts__temperature">
 						{ condition.temperature.value }°
 					</div>
 				)
@@ -168,19 +168,19 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 
 			let windMps
 			if(condition.wind.mps == null || condition.wind.mps == ''){
-				windMps = ''
+				windMps = '---'
 			} else {
 				windMps = (
-					<h3 className="card-preview__wind-header">
-						{ condition.wind.mps }m/s
+					<h3 className="facts__wind-header">
+						{ condition.wind.mps } <span className="facts__wind-header-sub">m/s</span> 
 					</h3>
 				)
 			}
 
 			return (
-				<div className="card-preview__wind-contianer">
+				<div className="fact__wind-container">
 						{windMps}
-					<p className="card-preview__wind-description">
+					<p className="fact__wind-description">
 						{ condition.wind.speed }
 					</p>
 				</div>
@@ -189,9 +189,8 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 
 		conditionDescription = ( condition ) => {
 			return (
-				<div className="card-preview__facts-condition-container">
-
-					<h3 className="card-preview__facts-condition">
+				<div className="facts__condition-container">
+					<h3 className="facts__condition">
 						{ condition.condition_description }
 					</h3>
 				</div>
