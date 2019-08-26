@@ -4,10 +4,11 @@
 
 - Downoload repo as a zip file
 - Go to your wordpress admin panel > Plugin tab > Add new
+- Click "Upload Plugin" in the top left
 - Click "Choose File" and select downloade zip file
 - Click "Install Now"
 - Click "Activate Plugin"
-- Go to a post and add gutenberg block 
+- Go to a post or a page and add gutenberg block 
 -- search for it under 'ski resort'
 
 ### Develop plugin

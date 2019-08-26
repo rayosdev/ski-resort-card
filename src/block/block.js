@@ -64,6 +64,7 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 				this.props.setAttributes({
 					resortNames: resortNames,
 				})
+				console.log(this.props.attributes)
 			})
 
 			//__ Old Method
@@ -258,7 +259,7 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 					<Select
 						className="ski-resort-card__select"
 						placeholder="Velg Ski Senter..."
-						options={ this.props.attributes._resortNames.map(option => {
+						options={ this.props.attributes.resortNames.map(option => {
 							return {value: option.name, label: option.name}
 						}) }
 						onChange={ this.handelChange }
