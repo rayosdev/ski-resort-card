@@ -67,7 +67,7 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 					_resortNames: _resortNames,
 				})
 			})
-			
+
 			//__ Old Method
 			fetch('https://api.fnugg.no/search?')
 			.then(res => {
@@ -88,21 +88,28 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 				})
 			})
 		}
-		
+
 		handelChange = (e) => {
 
-
-			
 			let nameAndID = this.props.attributes._resortNames.filter(nameObject => {
 				return nameObject.name == e.value
-			}) 
+			}).pop()
 
-			let selectedResort = this.props.attributes['resortList'].filter(resort => {
-				return resort.name == e.value
+			fetch(`https://api.fnugg.no/get/resort/${nameAndID.id}`)
+			.then(res => {
+				return res.json()
 			})
-			this.props.setAttributes({
-				selectedResort: selectedResort[0]
+			.then(json => {
+				this.props.setAttributes({
+					selectedResort: json._source
+				})
 			})
+
+			// let selectedResort = this.props.attributes['resortList'].filter(resort => {
+			// 	return resort.name == e.value
+			// })
+
+
 			// setTimeout(()=> {
 			// 	console.log(this.props.attributes['selectedResort'])
 			// },1000)
@@ -110,7 +117,7 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 
 		getImage = () => {
 			return this.props.attributes.selectedResort.images.image_1_1_s
-		} 
+		}
 
 		formateDate = (date) => {
 			const day 	= date.slice(0,10)
@@ -145,20 +152,35 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 		}
 
 		temperature = ( condition ) => {
-			return (
-				<div className="card-preview__temperature">
-					{ condition.temperature.value }°
-				</div>
-			)
+
+			if(condition.temperature.value == null || condition.temperature.value == ''){
+				return ''
+			}else{
+				return (
+					<div className="card-preview__temperature">
+						{ condition.temperature.value }°
+					</div>
+				)
+			}
 		}
 
 		windConditions = ( condition ) => {
-			return (
-				<div className="card-preview__wind-contianer">
+
+			let windMps
+			if(condition.wind.mps == null || condition.wind.mps == ''){
+				windMps = ''
+			} else {
+				windMps = (
 					<h3 className="card-preview__wind-header">
 						{ condition.wind.mps }m/s
 					</h3>
-					<p className="card-preview__wind-header">
+				)
+			}
+
+			return (
+				<div className="card-preview__wind-contianer">
+						{windMps}
+					<p className="card-preview__wind-description">
 						{ condition.wind.speed }
 					</p>
 				</div>
@@ -176,17 +198,28 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 			)
 		}
 
+		getSelectedResort = ( attributes ) => {
+			if(typeof(attributes.selectedResort) !== 'undefined'){
+				return attributes.selectedResort
+			}
+		}
+
+		getConditions = (resort) => {
+			if(typeof(resort.conditions.combined.top) !== 'undefined'){
+				return resort.conditions.combined.top
+			}
+		}
 
 		render() {
 
-			const selectedResort = this.props.attributes.selectedResort
-			const conditions = selectedResort.conditions.combined.top
-			if(typeof(condition.symbol.name) === 'undefined'){
-				
-			}
+			const selectedResort = this.getSelectedResort(this.props.attributes)
 			
 			let previewCard
-			if(selectedResort){
+			if(selectedResort != null){
+
+				const conditions = this.getConditions(selectedResort)
+				
+
 				previewCard = (
 					<div className="card-preview card-preview__container">
 						<div className="card-preview__header-container">
@@ -194,7 +227,7 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 								{ selectedResort.name }
 							</h1>
 						</div>
-						<div 
+						<div
 							className="card-preview__image-container"
 							style={{
 									backgroundImage: `url(${ selectedResort.images.image_1_1_s })`,
@@ -212,15 +245,15 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 							</div>
 						</div>
 						<div className="card-preview__facts-container">
-							
+
 							{ this.skyConditions( conditions ) }
-							
+
 							{ this.temperature( conditions ) }
-							
+
 							{ this.windConditions( conditions ) }
-							
+
 							{ this.conditionDescription( conditions ) }
-							
+
 						</div>
 
 					</div>
@@ -238,7 +271,7 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 						onChange={ this.handelChange }
 					/>
 
-					{ previewCard }
+					{previewCard}
 
 				</div>
 			)
