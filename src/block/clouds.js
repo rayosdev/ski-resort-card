@@ -1,6 +1,6 @@
 
 const skyIcons = {
-    ClearSky:{
+    Sun:{
         icon: 'wi-day-sunny',
         text: 'Sol/klarvær'
     },

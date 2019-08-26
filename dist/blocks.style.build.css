@@ -21,3 +21,128 @@ h1, h2, h3, p {
   margin: 0 auto;
   max-width: 740px;
   padding: 2rem; }
+
+.resort-card__container h1::before,
+.resort-card__container h2::before {
+  display: none !important;
+  font-family: "Open Sans", sans-serif !important; }
+
+.resort-card__container h1,
+.resort-card__container h2,
+.resort-card__container h3 {
+  margin: 0 !important;
+  padding: 0 !important; }
+
+.ski-resort-card__select {
+  max-width: 550px;
+  margin: 0 auto;
+  margin-bottom: 70px;
+  padding-top: 40px; }
+
+.resort-card__container {
+  max-width: 350px !important;
+  margin: 0 auto;
+  -webkit-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+          box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  font-family: 'Open Sans', sans-serif; }
+
+.resort-card__header-container {
+  height: 42px;
+  background: #333333;
+  border-radius: 5px 5px 0px 0px;
+  display: grid; }
+
+.resort-card__header {
+  font-weight: bold;
+  font-size: 16px !important;
+  letter-spacing: 0.025em;
+  text-justify: center;
+  color: #FFFFFF;
+  -ms-flex-item-align: center;
+      align-self: center;
+  margin: 0;
+  margin-left: 0.5vw; }
+
+.resort-card__image-container {
+  min-height: 200px;
+  display: grid; }
+
+.resort-card__image-byline-container {
+  background: #333333af;
+  color: #ffffff;
+  height: 100%;
+  max-height: 60px;
+  align-self: end;
+  display: grid;
+  -ms-flex-pack: center;
+      justify-content: center;
+  text-align: center; }
+
+.resort-card .image-byline__header {
+  font-size: 18px !important;
+  color: #fff;
+  font-weight: 400;
+  -ms-flex-item-align: end;
+      align-self: end; }
+
+.resort-card .image-byline__date {
+  font-size: 12px;
+  -ms-flex-item-align: start;
+      align-self: start;
+  text-align: center;
+  margin-top: -5px; }
+
+.resort-card__facts-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  justify-items: center;
+  -ms-flex-align: center;
+      align-items: center;
+  padding: 5px;
+  min-height: 220px; }
+
+.resort-card .facts__sky-container {
+  text-align: center; }
+
+.resort-card .facts__sky-icon {
+  font-size: 40px;
+  color: #555;
+  margin-bottom: -20px; }
+
+.resort-card .facts__sky-text {
+  font-weight: normal;
+  font-size: 12px; }
+
+.resort-card .facts__temperature {
+  font-weight: normal;
+  font-size: 72px;
+  text-align: center;
+  letter-spacing: 0.025em;
+  color: #EB6662; }
+
+.resort-card .facts__wind-container {
+  text-align: right; }
+
+.resort-card .facts__wind-header {
+  font-size: 24px;
+  font-weight: normal; }
+
+.resort-card .facts__wind-header-sub {
+  font-size: 12px; }
+
+.resort-card .facts__wind-description {
+  font-weight: normal;
+  font-size: 12px; }
+
+.resort-card .facts__condition-container {
+  justify-self: center;
+  align-self: center;
+  display: grid; }
+
+.resort-card .facts__condition {
+  font-weight: normal;
+  font-size: 12px;
+  justify-self: center;
+  -ms-flex-item-align: center;
+      align-self: center; }

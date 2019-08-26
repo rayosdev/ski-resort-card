@@ -82,8 +82,101 @@ function ski_resort_card_cgb_block_assets() { // phpcs:ignore
 			'editor_script' => 'ski_resort_card-cgb-block-js',
 			// Enqueue blocks.editor.build.css in the editor only.
 			'editor_style'  => 'ski_resort_card-cgb-block-editor-css',
+			'render_callback' => 'render_post_block'
 		)
 	);
+}
+
+function render_post_block( $attributes ){
+	
+	if (function_exists('get_current_screen')){
+		return;
+	};
+	
+	$url = 'https://api.fnugg.no/get/resort/10';
+	$args = array(
+		'method' => 'GET'
+	);
+
+	$respons = wp_remote_get( $url, $args);
+
+	if( is_wp_error( $respons )){
+		$error_message = $respons->get_error_message();
+		echo "Error: ". $error_message;
+	}
+
+	$data = json_decode(wp_remote_retrieve_body($respons ));
+
+	$resort_name = $data->_source->name;
+	$resort_image = $data->_source->images->image_1_1_s;
+	$last_updated = $data->_source->conditions->combined->top->last_updated;
+	$sky_conditions = $data->_source->conditions->combined->top->symbol->name;
+	$temperature = $data->_source->conditions->combined->top->temperature->value;
+	$wind_conditions_mps = $data->_source->conditions->combined->top->wind->mps;
+	$wind_conditions_text = $data->_source->conditions->combined->top->wind->speed;
+	$condition_description = $data->_source->conditions->combined->top->condition_description;
+
+	include 'clouds.php';
+	$sky_conditions = get_sky_condition($sky_conditions ,$sky_icons);
+
+	// echo '<pre>';
+	// print_r($data->_source);
+	// echo'</pre>';
+	// die();
+
+	echo 
+	'<div class="resort-card resort-card__container">
+		<div class="resort-card__header-container">
+			<h1 class="resort-card__header">
+				'. $resort_name .'
+			</h1>
+		</div>
+		<div
+			class="resort-card__image-container"
+			style="
+					background-image: url(\''. $resort_image .'\');
+					background-repeat: no-repeat;
+					background-size: cover;
+				"
+		>
+			<div class="resort-card__image-byline-container">
+				<h2 class="image-byline__header">
+					DAGENS FORHOLD
+				</h2>
+				<p class="image-byline__date">
+					Oppdatert: '. $last_updated .'
+				</p>
+			</div>
+		</div>
+		<div class="resort-card__facts-container">
+
+			<div class="facts__sky-container">
+				<i class="facts__sky-icon  [ wi '. $sky_conditions['icon'] .' ]"></i>
+				<h3 class="facts__sky-text"> '. $sky_conditions['text'] .' </h3>
+			</div>
+
+			<div class="facts__temperature">
+				'. $temperature .'°
+			</div>
+			
+			<div class="fact__wind-container">
+				<h3 class="facts__wind-header">
+					'. $wind_conditions_mps .' <span class="facts__wind-header-sub">m/s</span> 
+				</h3>
+				<p class="fact__wind-description">
+					'. $wind_conditions_text .'
+				</p>
+			</div>
+			
+
+			<div class="facts__condition-container">
+				<h3 class="facts__condition">
+					'. $condition_description .'
+				</h3>
+			</div>
+		</div>
+	</div>';
+
 }
 
 // Hook: Block assets.
