@@ -50,48 +50,46 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 		}
 
 		componentDidMount() {
-			//__ New Method
 			fetch('https://api.fnugg.no/search?sourceFields=name&size=1000')
 			.then(res => {
 				return res.json()
 			})
 			.then(json => {
-				// console.log(json)
-				let _resortNames = json.hits.hits.map(resorts => {
+				let resortNames = json.hits.hits.map(resorts => {
 					return {
 								id: resorts._id,
 								name: resorts._source.name
 							}
 				})
 				this.props.setAttributes({
-					_resortNames: _resortNames,
+					resortNames: resortNames,
 				})
 			})
 
 			//__ Old Method
-			fetch('https://api.fnugg.no/search?')
-			.then(res => {
+			// fetch('https://api.fnugg.no/search?')
+			// .then(res => {
 
-				return res.json()
+			// 	return res.json()
 
-			})
-			.then(json => {
+			// })
+			// .then(json => {
 
-				let resortNames = []
-				let resortList = json.hits.hits.map(resorts => {
-					resortNames.push(resorts._source.name)
-					return resorts._source
-				})
-				this.props.setAttributes({
-					resortNames: resortNames,
-					resortList: resortList
-				})
-			})
+			// 	let resortNames = []
+			// 	let resortList = json.hits.hits.map(resorts => {
+			// 		resortNames.push(resorts._source.name)
+			// 		return resorts._source
+			// 	})
+			// 	this.props.setAttributes({
+			// 		resortNames: resortNames,
+			// 		resortList: resortList
+			// 	})
+			// })
 		}
 
 		handelChange = (e) => {
 
-			let nameAndID = this.props.attributes._resortNames.filter(nameObject => {
+			let nameAndID = this.props.attributes.resortNames.filter(nameObject => {
 				return nameObject.name == e.value
 			}).pop()
 
@@ -104,10 +102,6 @@ registerBlockType( 'cgb/block-ski-resort-card', {
 					selectedResort: json._source
 				})
 			})
-
-			// let selectedResort = this.props.attributes['resortList'].filter(resort => {
-			// 	return resort.name == e.value
-			// })
 
 
 			// setTimeout(()=> {

@@ -93,7 +93,9 @@ function render_post_block( $attributes ){
 		return;
 	};
 	
-	$url = 'https://api.fnugg.no/get/resort/10';
+
+
+	$url = 'https://api.fnugg.no/get/resort/'.$attributes['selectedResort']['id'];
 	$args = array(
 		'method' => 'GET'
 	);
