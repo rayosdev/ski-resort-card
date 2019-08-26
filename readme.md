@@ -9,7 +9,7 @@
 - Click "Install Now"
 - Click "Activate Plugin"
 - Go to a post or a page and add gutenberg block 
--- search for it under 'ski resort'
+    - search for it under 'ski resort'
 
 >PS you might get a "Updating failed" message when changing the block in editor, ignore it
 >It dose update the block. 
@@ -17,6 +17,14 @@
 
 ### Develop plugin
 
+## clone repo
+
+## run `npm install`
+
+## run `npm start`
+
+
+----------------------------
 
 This project was bootstrapped with [Create Guten Block](https://github.com/ahmadawais/create-guten-block).
 
