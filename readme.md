@@ -11,6 +11,10 @@
 - Go to a post or a page and add gutenberg block 
 -- search for it under 'ski resort'
 
+>PS you might get a "Updating failed" message when changing the block in editor, ignore it
+>It dose update the block. 
+>The error seams to come from a problem with https settings
+
 ### Develop plugin
 
 
